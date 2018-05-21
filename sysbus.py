@@ -20,6 +20,15 @@ import datetime
 import html
 import subprocess
 
+try:
+    import manuf
+    mac_parser = manuf.MacParser()
+    def MacParser(mac):
+        return mac_parser.get_manuf(mac)
+except:
+    def MacParser(mac):
+        return ""
+
 
 ##
 # @brief python 3 est requis
@@ -1353,7 +1362,9 @@ def add_commands(parser):
             #pprint.pprint(r['status'])
             for host in r['status']:
                 actif = " " if host['active'] else "*"
-                s = "%-18s %-5s %c %-30s" % (host['physAddress'], host['layer2Interface'], actif, host['hostName'])
+                s = "%-18s %-10s %-5s %c %-30s" % (host['physAddress'],
+                        MacParser(host['physAddress']),
+                        host['layer2Interface'], actif, host['hostName'])
                 if 'addresses' in host and len(host['addresses']) > 0:
                     for a in host['addresses']:
                         print("{} {}".format(s, a['ipAddress']))
