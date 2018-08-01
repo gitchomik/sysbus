@@ -69,7 +69,7 @@ URL_LIVEBOX = 'http://livebox.home/'
 USER_LIVEBOX = 'admin'
 PASSWORD_LIVEBOX = 'admin'
 MINECRAFT_PORT = 54520
-VERSION_LIVEBOX = 'lb4'  
+VERSION_LIVEBOX = 'lb4'
 
 ##
 # @brief niveau de détail, -v pour l'augmenter
@@ -136,7 +136,7 @@ def get_livebox_ip_mac():
 # @param a
 # @param b
 #
-# @return 
+# @return
 def compare_mac(a, b):
     m = re.findall('([a-fA-F\d]{1,2})[:-]?', a)
     if len(m) != 6: return False
@@ -180,7 +180,7 @@ def write_conf(args):
 #
 # @return
 def load_conf():
-    global USER_LIVEBOX, PASSWORD_LIVEBOX, URL_LIVEBOX, VERSION_LIVEBOX, MINECRAFT_PORT 
+    global USER_LIVEBOX, PASSWORD_LIVEBOX, URL_LIVEBOX, VERSION_LIVEBOX, MINECRAFT_PORT
 
     rc = os.path.expanduser("~") + "/" + ".sysbusrc"
     debug(3, 'rc file', rc)
@@ -194,14 +194,14 @@ def load_conf():
         VERSION_LIVEBOX = config['main']['VERSION_LIVEBOX']
 
         MINECRAFT_PORT = config['minecraft']['port']
-        
+
         if config['main']['auto'].lower() in ['true', 'yes', '1']:
             ip, eth = get_livebox_ip_mac()
             if ip and eth:
                 for i in config.sections():
                     if compare_mac(i, eth):
                         if 'URL_LIVEBOX' in config[i]:
-                            URL_LIVEBOX = config[i]['URL_LIVEBOX'] 
+                            URL_LIVEBOX = config[i]['URL_LIVEBOX']
                         else:
                             URL_LIVEBOX = "http://{}/".format(ip)
                         if 'USER_LIVEBOX' in config[i]:
@@ -1741,15 +1741,20 @@ def add_commands(parser):
         if len(args) == 1 and args[0] == '?':
             return print(r[0].keys())
 
-        for i in reversed(r):
+        for i in r:
             if len(args) > 0:
                 print(i[args[0]])
             else:
                 d = datetime.datetime.strptime(i['startTime'], "%Y-%m-%dT%H:%M:%SZ")
 
-                print("{:>3} {:12}   {}  {}   {:10}".format(
+                if i['callOrigin'] == 'local':
+                    arrow = '<=='
+                else:
+                    arrow = '==>'
+                print("{:>3} {} {:16}  {}  {}  {:10}".format(
                     i['callId'],
-                    i['remoteNumber'],
+                    arrow,
+                    i['remoteNumber'] if i['remoteNumber'] != '' else '**********',
                     d,
                     str(datetime.timedelta(seconds=int(i['duration']))),
                     i['callType']
