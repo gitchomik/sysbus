@@ -1,0 +1,3 @@
+[submodule "libs/manuf"]
+	path = libs/manuf
+	url = https://github.com/rene-d/manuf
