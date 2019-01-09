@@ -1,213 +1,207 @@
-# sysbus.py
-`sysbus.py` est un script écrit Python 3 qui permet de contrôler une Livebox par programme et d'en explorer les possibilités de contrôle et autres informations masquées. C'est un outil « expérimental ».
+# sysbus.py 
+`sysbus.py` is a Python 3 script that allows you to programmatically control a Livebox and explore control possibilities and other hidden information. It is an "experimental" tool. 
 
-Il n'y a - malheureusement - aucune information cachée croustillante à découvrir, ou alors je n'ai rien trouvé. La Livebox est suffisamment bien fermée.
+There is - unfortunately - no crunchy hidden information to discover, or so I have not found anything. The Livebox is closed well enough. 
 
-## Installation
+## Installation 
 
-Le script est écrit en [Python 3](https://www.python.org/downloads/). Il requiert également [requests](http://docs.python-requests.org/) qui simplifie grandement les requêtes HTTP. Il utilise éventuellement [Graphviz](http://www.graphviz.org) et un de ses modules d'interface Python [graphviz](https://pypi.python.org/pypi/graphviz) pour dessiner des graphes.
+The script is written in [Python 3] (https://www.python.org/downloads/). It also requires [requests] (http://docs.python-requests.org/) which greatly simplifies HTTP requests. It may use [Graphviz] (http://www.graphviz.org) and one of its Python interface modules [graphviz] (https://pypi.python.org/pypi/graphviz) to draw graphs.
 
-    $  pip3 install requests graphviz
 
-Il faudra également installer le moteur Graphviz. Sur OSX on peut utiliser [brew](http://brew.sh). Sur Linux, `sudo apt-get install graphviz` ou équivalent selon la distribution.
+It will also install the Graphviz engine. On OSX we can use [brew] (http://brew.sh). On Linux, `sudo apt-get install graphviz` or equivalent depending on the distribution. 
 
-Cela devrait fonctionner également avec Windows. Se référer aux sites des différents logiciels pour les procédures d'installation.
+This should work also with Windows. Refer to the sites of the various software for installation procedures. 
 
-## Configuration
+## Configuration 
 
-La plupart des requêtes requiert une authentification. C'est l'utilisateur `admin` et le mot de passe d'administration (par défaut les 8 premiers caractères de la clé Wi-Fi).
+Most requests require authentication. This is the user `admin` and the admin password (by default the first 8 characters of the Wi-Fi key). 
 
-Le script mémorise le mot de passe (ainsi que l'adresse de la Livebox et sa version si l'on n'utilise pas les valeurs par défaut) dans le fichier `~/.sysbusrc`.  
+The script stores the password (as well as the address of the Livebox and its version if you do not use the default values) in the `~ / .sysbusrc` file.  
 
-La version de la livebox vaut par défaut `lb4` (Livebox 4) mais peut être remplacée (`lb3` par exemple) après l'argument `-lversion`.  
+The version of the livebox defaults to `lb4` (Livebox 4) but can be replaced (` lb3` for example) after the `-lversion` argument.  
 
-Pour configurer, taper la commande suivante (en admettant que le mot de passe soit SECRET):
+To configure, type the following command (assuming that the password is SECRET): 
 
-    $ ./sysbus.py -config -password SECRET [ -url http://192.168.1.1/ ] [ -lversion lb4 ]
+    $ ./sysbus.py -config -password SECRET [-url http://192.168.1.1/] [-lversion lb4] 
 
-Dorénavant, le script utilisera ces informations de connexion à chaque fois. On peut tester en demandant l'heure de l'équipement:
+From now on, the script will use this login information each time. One can test by asking the time of the equipment: 
 
-    $ ./sysbus.py
-    Livebox time:  Sun, 14 Feb 2016 22:08:32 GMT+0100
+    $ ./sysbus.py 
+    Livebox time: Sun, 14 Feb 2016 22:08:32 GMT + 0100 
 
-## Utilisation
+## Use 
 
-Un certain nombre de requêtes sont intégrées au script (comme la demande de l'heure, ou des clés Wi-Fi, des périphériques présents, etc.) avec plus ou moins de formatage du résultat.
+A certain number of requests are integrated in the script (like the request time, or Wi-Fi keys, devices present, etc.) with more or less formatting of the result.
 
-Le script est aussi capable d'envoyer presque n'importe quelle requête, pourvu qu'on la spécifie entièrement sur la ligne de commande.
+The script is also able to send almost any request, provided that it is fully specified on the command line. 
 
-    $ ./sysbus.py Time:getTime
-    Livebox time:  Sun, 14 Feb 2016 22:13:30 GMT+0100
+    $ ./sysbus.py Time: getTime 
+    Livebox time: Sun, 14 Feb 2016 22:13:30 GMT + 0100 
 
-L'option `-h` ou `--help` affiche l'ensemble de la syntaxe possible.
+The `-h` or` --help` option displays all the possible syntax. 
 
-## L'interface sysbus
+## The sysbus interface 
 
-En parcourant les sources mises à disposition par Orange [ici](http://opensource.orange.com/), on peut établir que les Livebox depuis la version 2 utilisent un middleware développé par [SoftAtHome](http://www.softathome.com) et un moteur de datamodel maison nommé "pcb".
+By browsing the sources made available by Orange [here] (http://opensource.orange.com/), we can establish that the Liveboxes since version 2 use a middleware developed by [SoftAtHome] ( http://www.softathome.com) and a home datamodel engine named "pcb".
 
-Malheureusement je n'ai trouvé aucune référence sur Internet de cette technologie propriétaire, ou bien elle est noyée parmi toutes les [significations](https://fr.wikipedia.org/wiki/PCB) de l'acronyme, dont _Printed Circuit Board_. Orange et son séide SoftAtHome offrent donc un jeu de piste et d'énigmes.
+Unfortunately I have not found any Internet references to this proprietary technology, or it is embedded among all the [meanings] (https://fr.wikipedia.org/wiki/PCB) of the acronym, including _Printed Circuit Board_ . Orange and his friend SoftAtHome therefore offer a treasure hunt and puzzles. 
 
-Ce datamodel interne communique avec l'extérieur via une interface HTTP et du JSON nommée "sysbus".
+This internal datamodel communicates with the outside via an HTTP interface and JSON named "sysbus". 
 
-C'est cette interface qu'exploite l'interface d'administration [http://livebox.home] ou les apps [iOS](https://itunes.apple.com/fr/app/ma-livebox/id445573616?mt=8) et [Android](https://play.google.com/store/apps/details?id=com.orange.mylivebox.fr&hl=fr).
+This interface is used by the administration interface [http: //livebox.home] or the [iOS] apps (https://itunes.apple.com/en/app/ma-livebox/id445573616? mt = 8) and [Android] (https://play.google.com/store/apps/details?id=com.orange.mylivebox.fr&hl=en).
 
-Le principe est d'envoyer des requêtes POST avec une liste de paramètres dans un objet JSON, le retour sera un objet JSON contenant le résultat de la requête.
+The principle is to send POST requests with a list of parameters in a JSON object, the return will be a JSON object containing the result of the request. 
 
-Il est raisonnable de penser que c'est également par cette voie qu'Orange administre les Livebox (activation du Wi-Fi partagé, mises à jour) et peut-être diagnostics du réseau et/ou du matériel.
+It is reasonable to think that this is also the way that Orange administers Liveboxes (activation of shared Wi-Fi, updates) and perhaps network and / or hardware diagnostics. 
 
-### Exemple avec curl
+### Example with 
 
-API utilisée par les Livebox 4 (firmware SG40_sip-fr-2.14.8.1_7.21.3.1), qui fonctionne avec les Livebox 3 (avec le firmware SG30_sip-fr-5.17.3.1 au moins):
+PLC curl used by Livebox 4 (firmware SG40_sip-en-2.14.8.1_7.21.3.1), which works with Livebox 3 (with firmware SG30_sip-en-5.17.3.1 at least): 
 
-    $ curl -s -X POST -H "Content-Type: application/x-sah-ws-1-call+json" -d '{"service":"NMC","method":"getWANStatus","parameters":{}}' http://192.168.1.1/ws
+    $ curl -s -X POST -H "Content-Type: application / x-sah-ws-1-call + json" -d '{"service": "NMC", "method": "getWANStatus", "parameters" : {}} 'http: //192.168.1.
 
-API utilisée par les précédents Livebox ainsi que les applications mobiles:
 
-    $ curl -s -X POST -H "Content-Type: application/json" -d '{"parameters":{}}' http://192.168.1.1/sysbus/NMC:getWANStatus | jq .
+    $ curl -s -X POST -H "Content-Type: application / json" -d '{"parameters": {}}' http://192.168.1.1/sysbus/NMC:getWANStatus | jq. 
 
-Résultat :
+Result: 
 
-    {
-      "result": {
-        "status": true,
-        "data": {
-          "LinkType": "ethernet",
-          "LinkState": "up",
-          "MACAddress": "3C:81:D8:xx:yy:zz",
-          "Protocol": "dhcp",
-          "ConnectionState": "Bound",
-          "LastConnectionError": "None",
-          "IPAddress": "aa.bb.cc.dd",
-          "RemoteGateway": "aa.bb.cc.dd",
-          "DNSServers": "80.10.246.136,81.253.149.6",
-          "IPv6Address": "2a01:cb00:xyzt:abcd:1:2:3:4",
-          "IPv6DelegatedPrefix": "2a01:cb00:xyzt:abcd::/56"
-        }
-      }
-    }
+    { 
+      "result": { 
+        "status": true, 
+        "data": { 
+          "LinkType": "ethernet", 
+          "LinkState": "up", 
+          "MACAddress": "3C: 81: D8: xx: yy: zz ", 
+          " Protocol ":" dhcp ", 
+          " ConnectionState ":" Bound ", 
+          " LastConnectionError ":" None ", 
+          " IPAddress ":" aa.bb.cc.dd ", 
+          " RemoteGateway ":"
+      } 
+    } 
 
-[jq](https://stedolan.github.io/jq/) est un outil qui permet entre autres de
-reformater le JSON.
+[jq] (https://stedolan.github.io/jq/) is a tool that allows, among other things, to 
+reformat the JSON. 
 
-Nota: cette requête ne requiert pas d'authentification, contrairement à la demande d'heure.
+Note: This request does not require authentication, unlike the time request. 
 
-### Exemples avec le script
+### Examples with the script 
 
-    # requête similaire à l'exemple curl ci-dessus
-    $ ./sysbus.py sysbus.NMC:getWANStatus
+    # query similar to the curl example above 
+    $ ./sysbus.py sysbus.NMC: getWANStatus 
 
-    # en passant des paramètres
-    $ ./sysbus.py sysbus.NMC.Wifi:set Enable=True Status=True
+    # passing parameters 
+    $ ./sysbus.py sysbus.NMC.Wifi: set Enable = True Status = True 
 
-### Où trouver les requêtes ?
+### Where to find the requests?
 
-Le script a une option `-scan` qui liste plus ou moins les appels de méthode qui sont utilisées par l'interface web d'administration. Il utilise pour cela l'agglomérat de scripts javascript de la Livebox. Il faudra en revanche fouiller pour savoir les paramètres éventuels.
+The script has a `-scan` option that more or less lists the method calls that are used by the administration web interface. It uses for that the agglomeration of javascript scripts of the Livebox. On the other hand, it will be necessary to search to know the possible parameters. 
 
-Les débogueurs des navigateurs modernes sont aussi capables d'afficher les requêtes envoyées et leurs résultats.
+Modern browser debuggers are also able to view sent queries and their results. 
 
-Un autre moyen est d'utiliser [wireshark](https://www.wireshark.org) ou [tcpflow](https://github.com/simsong/tcpflow) et réaliser les actions que le souhaiter scripter, soit via l'interface web, soit via l'app mobile si on sait capturer le Wi-Fi du smartphone ou de la tablette.
+Another way is to use [wireshark] (https://www.wireshark.org) or [tcpflow] (https://github.com/simsong/tcpflow) and perform the actions that you wish to script, either via web interface, either via the mobile app if you know how to capture the Wi-Fi smartphone or tablet. 
 
-Enfin, la dernière source d'information est le datamodel.
+Finally, the last source of information is the datamodel. 
 
-## Le datamodel
+## The datamodel
 
-L'interface sysbus a une fonctionnalité intéressante : celle de pouvoir découvrir le datamodel.
+The sysbus interface has an interesting feature: that of being able to discover the datamodel. 
 
-Pour cela, la requête HTTP à faire est un GET sur le nom de l'objet. Le JSON retourné décrit le modèle.
+For this, the HTTP request to make is a GET on the name of the object. The returned JSON describes the model. 
 
-`sysbus.py` est capable de rendre plus lisible le retour en détectant les fonctions, les paramètres et les instances d'objet. Le décodage, basé uniquement sur l'observation, est peut-être incomplet.
+`sysbus.py` is able to make the return readable by detecting functions, parameters and object instances. Decoding, based solely on observation, may be incomplete. 
 
-    # interroge le datamodel de l'objet NMC.Wifi
-    $ ./sysbus.py NMC.Wifi -model
+    # queries the datamodel of the NMC.Wifi object 
+    $ ./sysbus.py NMC.Wifi -model 
 
-    =========================================== level 0
-    OBJECT NAME: 'NMC.Wifi'  (name: Wifi)
-    function: startPairing (opt clientPIN)
-    function: stopPairing ()
+    ============================ =============== level 0 
+    OBJECT NAME: 'NMC.Wifi' (name: Wifi) 
+    function: startPairing (opt clientPIN) 
+    function: stopPairing () 
     function: startAutoChannelSelection ()
     function: getStats (out RxBytes, out TxBytes)
-    function: get ()
-    function: set (opt parameters)
-    parameter:  Enable               : bool       = 'True'
-    parameter:  Status               : bool       = 'True'
-    parameter:  ConfigurationMode    : bool       = 'True'
+    function: get () 
+    function: set (opt parameters) 
+    parameter: Enable: bool = 'True' 
+    parameter: Status: bool = 'True' 
+    parameter: ConfigurationMode: bool = 'True' 
 
-Lancé sans nom d'objet, le programme affiche le datamodel entier, aux restrictions d'accès près. Cependant des sous-objets peuvent être accessibles, comme NeMo.Intf.data alors que ni NeMo ni NeMo.Intf ne sont accessibles. Il y a également les objets NeMo.MIB.*nom* (NeMo.MIB.alias par exemple), mais accès interdit.
+Launched without an object name, the program displays the datamodel, with access restrictions. However, sub-objects can be accessible, such as NeMo.Intf.data, while neither NeMo nor NeMo.Intf are accessible. There are also the objects NeMo.MIB. * Name * (NeMo.MIB.alias for example), but forbidden access. 
 
-L'option `-modeluml` va créer les diagrammes de classes avec [plantuml](http://plantuml.com) (voir exemple ci-dessous).
+The `-modeluml` option will create class diagrams with [plantuml] (http://plantuml.com) (see example below).
 
-Le datamodel reprend certains éléments de différents TR du Broadband Forum (cf. [TR-181](https://www.broadband-forum.org/cwmp/tr-181-2-10-0.html) par exemple). Par exemple, l'objet Device.Hosts est très similaire à celui qu'on trouve dans la Livebox, plus des extensions spécifiques à Orange (X_ORANGE-COM_xxx).
+The datamodel includes some elements of different TR of the Broadband Forum (see [TR-181] (https://www.broadband-forum.org/cwmp/tr-181-2-10-0.html) for example). For example, the Device.Hosts object is very similar to the one found in the Livebox, plus extensions specific to Orange (X_ORANGE-COM_xxx). 
 
-Par ailleurs, la présence d'un utilisateur 'cwmpd' (cf. l'objet UserManagement) au mot de passe inconnu tend à prouver que la Livebox communique en utilisant _CWMP_ (ou [TR-069](https://fr.wikipedia.org/wiki/TR-069)) avec sa gateway de management côté Orange.
+In addition, the presence of a user 'cwmpd' (see the UserManagement object) with the unknown password tends to prove that the Livebox communicates using _CWMP_ (or [TR-069] (https: //en.wikipedia .org / wiki / TR-069)) with its management gateway on the Orange side. 
 
-![diagramme de classe Hosts](docs/Hosts.png)
+! [Hosts class diagram] (docs / Hosts.png) 
 
-### Nouveautés Livebox 4
+### New Livebox 4 
 
-L'interface web de la LB4 est beaucoup plus évoluée. Le datamodel est sensiblement le même, avec des objets en plus.
+The LB4's web interface is much more advanced. The datamodel is essentially the same, with more objects.
 
-On y trouve aussi une description des méthodes via des requêtes Json :
+There is also a description of methods via Json queries: 
 
-    curl -s http://livebox.home/sdkut/apis/pcb/Time/getTime.json | jq .
+    curl -s http: //livebox.home/sdkut/apis/pcb/Time/getTime.json | jq. 
 
 
-## Le graphe NeMo.Intf
+## The NeMo.Intf graph 
 
-Les interfaces et pseudo-interfaces sont organisées en interne en graphe via des connexions _upper_ et _lower_.
+The interfaces and pseudo-interfaces are internally organized into graphs via _upper_ and _lower_ connections. 
 
-L'option `-graph` de `sysbus.py` utilise Graphviz pour afficher le graphe entier des interfaces.
+The `-graph` option in` sysbus.py` uses Graphviz to display the entire graph of the interfaces. 
 
-    $ ./sysbus.py -graph
+    $ ./sysbus.py -graph 
 
-![graphe fonctionnel](docs/nemo_intf.png)
+! [functional graph] (docs / nemo_intf.png) 
 
-En grisé, les blocs qui sont inaccessibles (ils sont découverts uniquement grâce aux liaisons _upper_ et _lower_). Et en ellipse, les blocs désactivés.
+In grayed out, the blocks that are inaccessible (they are discovered only thanks to the links _upper_ and _lower_). And in ellipse, blocks disabled.
 
-Le graphe s'affiche en SVG, ce qui est permet de zoomer sans perte. C'est modifiable uniquement dans le source du script (changer 'svg' en 'png' par exemple).
+The graph is displayed in SVG, which is used to zoom without loss. It can only be modified in the source of the script (change 'svg' to 'png' for example). 
 
-Chaque interface gère une ou plusieurs MIBs. La liste peut être extraite avec la commande :
+Each interface manages one or more MIBs. The list can be retrieved with the command: 
 
-    $ ./sysbus.py -MIBs show
+    $ ./sysbus.py -MIBs show 
 
-Les MIB (_Management Information Base_) sont apparemment proches des MIB SNMP, sans toutefois en être - ou alors ce sont des MIB propriétaires et inaccessibles en SNMP. C'est la MIB nommée `base` qui est exploitée pour construire le graphe.
+The MIBs (_Management Information Base_) are apparently close to SNMP MIBs, but they are not - or they are proprietary MIBs and can not be accessed in SNMP. This is the MIB named `base` which is exploited to build the graph. 
 
-    $ ./sysbus.py NeMo.Intf.wl1:getMIBs mibs=base traverse=this
-    {'status': {'base': {'wl1': {'Enable': True,
-                                 'Flags': 'wlanvap penable netdev enabled '
-                                          'wlanvap-bound wlansta netdev-bound '
-                                          'inbridge netdev-up up',
-                                 'LLIntf': {'wifi1_ath': {'Name': 'wifi1_ath'}},
-                                 'Name': 'wl1',
-                                 'Status': True,
-                                 'ULIntf': {'bridge': {'Name': 'bridge'}}}}}}
+    $ ./sysbus.py NeMo.Intf.wl1: getMIBs mibs = base traverse = this 
+    {'status': {'base': {'wl1': {'Enable': True,  
+                                 ' Flags': 'wlanvap penable netdev enabled '
+                                          'wlanvap-bound wlansta netdev-bound' 
+                                          'inbridge netdev-up' ', 
+                                 ' LLIntf ': {' wifi1_ath ': {' Name ':' wifi1_ath '}}, 
+                                 ' Name ':' wl1 ', 
+                                 ' Status': True , 
+                                 'ULIntf': {'bridge': {'Name': 'bridge'}}}}}} 
 
-L'interprétation du résultat de cette requête est :
+The interpretation of the result of this query is: 
 
-- l'objet `wl1` possède la MIB `base`
-- les propriétés de la MIB `base` sont : `Name` `LLIntf` `ULIntf` `Status` `Enable` `Flags`
-- cette MIB décrit le graphe, `wl1` étant connecté par un lien _upper_ à l'interface `bridge` et par un lien _lower_ à `wifi1_ath`
-- l'interface est activée (`Status`)
+- the `wl1` object has the` base` MIB 
+- the properties of the base MIB are: `Name`` LLIntf` `ULIntf`` Status` `Enable`` Flags` 
+- this MIB describes the graph,`wl1` being connected by a _upper_ link to the` bridge` interface and a _lower_ link to `wifi1_ath`
+- the interface is activated (`Status`) 
 
-La commande est également capable d'établir un tableau croisé entre MIBs et interface pour en trouver l'usage. Cf. ce [résultat](docs/MIBs.md) où X=utilisée, 0=référencée mais vide.
+The command is also able to establish a cross-tab between MIBs and interface to find the use. See this [result] (docs / MIBs.md) where X = used, 0 = referenced but empty. 
 
-    $ ./sysbus.py -MIBs table [html]
+    $ ./sysbus.py -MIBs table [html] 
 
-**Remarques :**
+** Remarks: ** 
 
-- Le graphe est peut-être incomplet puisqu'on ne connait les liaisons que des blocs accessibles : on ne peut pas connaître les liaisons entre deux blocs inaccessibles.
-- Par ailleurs, les deux blocs commençant par `data` et `lan` semblent séparés, tout deux étant au sommet de deux graphes distincts (au moins si le Wi-Fi partagé n'est pas activé). Pourtant le flux de données passe nécessairement d'un graphe à l'autre. `data` est relié à `eth1` qui la connexion extérieure, vers le boîtier fibre, `lan` est relié au Wi-Fi et à `eth0` qui représente le switch 4 ports du réseau local.
-- Il reste certainement à découvrir d'autres informations disséminées dans ces MIB.
+- The graph is perhaps incomplete since we only know the connections accessible blocks: we can not know the connections between two inaccessible blocks.
+- By the way, the two blocks starting with `data` and` lan` seem separate, both being at the top of two separate graphs (at least if shared Wi-Fi is not enabled). Yet the flow of data necessarily passes from one graph to another. `data` is connected to` eth1` which the external connection, to the fiber box, `lan` is connected to Wi-Fi and` eth0` which represents the switch 4 ports of the local network. 
+- It remains undoubtedly to discover other information disseminated in these MIBs. 
 
-## La topologie du réseau
+## The network topology
 
-La Livebox est plus ou moins capable d'afficher la [topologie du réseau](http://livebox.home/supportMapper.html) depuis sa page d'administration. Ces informations sont stockées dans le datamodel, et il a plus de détails que l'interface web veut bien en afficher.
+The Livebox is more or less able to display the [network topology] (http: //livebox.home/supportMapper.html) from its admin page. This information is stored in the datamodel, and it has more details than the web interface wants to display. 
 
-Notamment, les périphériques connectés en Wi-Fi 2.4GHz (interface wl0) et ceux connectés en 5GHz (interface wl1).
+In particular, peripherals connected in Wi-Fi 2.4GHz (interface wl0) and those connected in 5GHz (interface wl1). 
 
-`sysbus.py` doit être lancé avec l'option `-topo` pour obtenir ce graphe. En fonction du nombre de périphériques, le graphe est très gros. En rajoutant `simple` le programme n'affiche que le nom des périphériques.
+`sysbus.py` must be started with the` -topo` option to get this graph. Depending on the number of devices, the graph is very big. Adding `simple` the program only displays the device names. 
 
-On y voit également les ports USB et l'UPnP.
+We also see USB ports and UPnP. 
 
-    $ ./sysbus.py -topo simple
+    $ ./sysbus.py -topo simple 
 
-![topologie réseau](docs/devices.png)
+! [network topology] (docs / devices.png)
