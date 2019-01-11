@@ -1,14 +1,16 @@
 # sysbus.py 
+https://github.com/rene-d/sysbus/
+
 `sysbus.py` is a Python 3 script that allows you to programmatically control a Livebox and explore control possibilities and other hidden information. It is an "experimental" tool. 
 
 There is - unfortunately - no crunchy hidden information to discover, or so I have not found anything. The Livebox is closed well enough. 
 
 ## Installation 
 
-The script is written in [Python 3] (https://www.python.org/downloads/). It also requires [requests] (http://docs.python-requests.org/) which greatly simplifies HTTP requests. It may use [Graphviz] (http://www.graphviz.org) and one of its Python interface modules [graphviz] (https://pypi.python.org/pypi/graphviz) to draw graphs.
+The script is written in [Python 3](https://www.python.org/downloads/). It also requires [requests](http://docs.python-requests.org/) which greatly simplifies HTTP requests. It may use [Graphviz](http://www.graphviz.org) and one of its Python interface modules [graphviz](https://pypi.python.org/pypi/graphviz) to draw graphs.
 
 
-It will also install the Graphviz engine. On OSX we can use [brew] (http://brew.sh). On Linux, `sudo apt-get install graphviz` or equivalent depending on the distribution. 
+It will also install the Graphviz engine. On OSX we can use [brew](http://brew.sh). On Linux, `sudo apt-get install graphviz` or equivalent depending on the distribution. 
 
 This should work also with Windows. Refer to the sites of the various software for installation procedures. 
 
@@ -42,13 +44,13 @@ The `-h` or` --help` option displays all the possible syntax.
 
 ## The sysbus interface 
 
-By browsing the sources made available by Orange [here] (http://opensource.orange.com/), we can establish that the Liveboxes since version 2 use a middleware developed by [SoftAtHome] ( http://www.softathome.com) and a home datamodel engine named "pcb".
+By browsing the sources made available by Orange [here](http://opensource.orange.com/), we can establish that the Liveboxes since version 2 use a middleware developed by [SoftAtHome](http://www.softathome.com) and a home datamodel engine named "pcb".
 
-Unfortunately I have not found any Internet references to this proprietary technology, or it is embedded among all the [meanings] (https://fr.wikipedia.org/wiki/PCB) of the acronym, including _Printed Circuit Board_ . Orange and his friend SoftAtHome therefore offer a treasure hunt and puzzles. 
+Unfortunately I have not found any Internet references to this proprietary technology, or it is embedded among all the [meanings(https://fr.wikipedia.org/wiki/PCB) of the acronym, including _Printed Circuit Board_ . Orange and his friend SoftAtHome therefore offer a treasure hunt and puzzles. 
 
 This internal datamodel communicates with the outside via an HTTP interface and JSON named "sysbus". 
 
-This interface is used by the administration interface [http: //livebox.home] or the [iOS] apps (https://itunes.apple.com/en/app/ma-livebox/id445573616? mt = 8) and [Android] (https://play.google.com/store/apps/details?id=com.orange.mylivebox.fr&hl=en).
+This interface is used by the administration interface [http: //livebox.home] or the apps [iOS](https://itunes.apple.com/en/app/ma-livebox/id445573616?mt=8) and [Android](https://play.google.com/store/apps/details?id=com.orange.mylivebox.fr&hl=en).
 
 The principle is to send POST requests with a list of parameters in a JSON object, the return will be a JSON object containing the result of the request. 
 
@@ -80,7 +82,7 @@ Result:
       } 
     } 
 
-[jq] (https://stedolan.github.io/jq/) is a tool that allows, among other things, to 
+[jq](https://stedolan.github.io/jq/) is a tool that allows, among other things, to 
 reformat the JSON. 
 
 Note: This request does not require authentication, unlike the time request. 
@@ -128,11 +130,11 @@ For this, the HTTP request to make is a GET on the name of the object. The retur
 
 Launched without an object name, the program displays the datamodel, with access restrictions. However, sub-objects can be accessible, such as NeMo.Intf.data, while neither NeMo nor NeMo.Intf are accessible. There are also the objects NeMo.MIB. * Name * (NeMo.MIB.alias for example), but forbidden access. 
 
-The `-modeluml` option will create class diagrams with [plantuml] (http://plantuml.com) (see example below).
+The `-modeluml` option will create class diagrams with [plantuml](http://plantuml.com) (see example below).
 
-The datamodel includes some elements of different TR of the Broadband Forum (see [TR-181] (https://www.broadband-forum.org/cwmp/tr-181-2-10-0.html) for example). For example, the Device.Hosts object is very similar to the one found in the Livebox, plus extensions specific to Orange (X_ORANGE-COM_xxx). 
+The datamodel includes some elements of different TR of the Broadband Forum (see [TR-181](https://www.broadband-forum.org/cwmp/tr-181-2-10-0.html) for example). For example, the Device.Hosts object is very similar to the one found in the Livebox, plus extensions specific to Orange (X_ORANGE-COM_xxx). 
 
-In addition, the presence of a user 'cwmpd' (see the UserManagement object) with the unknown password tends to prove that the Livebox communicates using _CWMP_ (or [TR-069] (https: //en.wikipedia .org / wiki / TR-069)) with its management gateway on the Orange side. 
+In addition, the presence of a user 'cwmpd' (see the UserManagement object) with the unknown password tends to prove that the Livebox communicates using _CWMP_ (or [TR-069](https://en.wikipedia.org/wiki/TR-069)) with its management gateway on the Orange side. 
 
 ![Hosts class diagram](docs/Hosts.png) 
 
@@ -194,7 +196,7 @@ The command is also able to establish a cross-tab between MIBs and interface to 
 
 ## The network topology
 
-The Livebox is more or less able to display the [network topology] (http: //livebox.home/supportMapper.html) from its admin page. This information is stored in the datamodel, and it has more details than the web interface wants to display. 
+The Livebox is more or less able to display the [network topology](http://livebox.home/supportMapper.html) from its admin page. This information is stored in the datamodel, and it has more details than the web interface wants to display. 
 
 In particular, peripherals connected in Wi-Fi 2.4GHz (interface wl0) and those connected in 5GHz (interface wl1). 
 
