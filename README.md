@@ -134,7 +134,7 @@ The datamodel includes some elements of different TR of the Broadband Forum (see
 
 In addition, the presence of a user 'cwmpd' (see the UserManagement object) with the unknown password tends to prove that the Livebox communicates using _CWMP_ (or [TR-069] (https: //en.wikipedia .org / wiki / TR-069)) with its management gateway on the Orange side. 
 
-! [Hosts class diagram] (docs / Hosts.png) 
+! [Hosts class diagram] (docs/Hosts.png) 
 
 ### New Livebox 4 
 
@@ -153,7 +153,7 @@ The `-graph` option in` sysbus.py` uses Graphviz to display the entire graph of 
 
     $ ./sysbus.py -graph 
 
-! [functional graph] (docs / nemo_intf.png) 
+! [functional graph] (docs/nemo_intf.png) 
 
 In grayed out, the blocks that are inaccessible (they are discovered only thanks to the links _upper_ and _lower_). And in ellipse, blocks disabled.
 
@@ -204,4 +204,4 @@ We also see USB ports and UPnP.
 
     $ ./sysbus.py -topo simple 
 
-! [network topology] (docs / devices.png)
+! [network topology] (docs/devices.png)
