@@ -186,7 +186,7 @@ The command is also able to establish a cross-tab between MIBs and interface to 
 
     $ ./sysbus.py -MIBs table [html] 
 
-** Remarks:** 
+**Remarks:** 
 
 - The graph is perhaps incomplete since we only know the connections accessible blocks: we can not know the connections between two inaccessible blocks.
 - By the way, the two blocks starting with `data` and` lan` seem separate, both being at the top of two separate graphs (at least if shared Wi-Fi is not enabled). Yet the flow of data necessarily passes from one graph to another. `data` is connected to` eth1` which the external connection, to the fiber box, `lan` is connected to Wi-Fi and` eth0` which represents the switch 4 ports of the local network. 
